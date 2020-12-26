@@ -60,6 +60,23 @@ func TestLoadReader(t *testing.T) {
 }
 
 //
+// TestLoadFile
+//
+func TestLoadFile(t *testing.T) {
+	ini, err := LoadFile("test_a.ini")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	chkkey(t, ini, "setting", "color", "red")
+	chkkey(t, ini, "setting", "width", "700")
+	chkkey(t, ini, "setting", "height", "450")
+
+	chkkey(t, ini, "server", "host", "10.10.20.20")
+	chkkey(t, ini, "server", "port", "3344")
+}
+
+//
 // chkkey
 //
 func chkkey(t *testing.T, ini *Ini, section, key, expect string) {
