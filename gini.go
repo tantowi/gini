@@ -128,7 +128,7 @@ func parseIni(in *bufio.Reader) (map[string]keys, error) {
 		lineNumber++
 
 		// remove comment
-		n := strings.IndexRune(line, '#')
+		n := strings.IndexAny(line, "#;")
 		if n >= 0 {
 			line = line[0:n]
 		}

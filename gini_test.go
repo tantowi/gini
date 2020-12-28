@@ -31,7 +31,8 @@ import (
 	"testing"
 )
 
-var ini01 = `# This is a comment
+var ini01 = `
+; This is a comment
 # Another comment
 
 [kamus]
@@ -215,4 +216,42 @@ func TestMalformedKey(t *testing.T) {
 	if err == nil {
 		t.Errorf("Undetected Malformed Key")
 	}
+}
+
+//
+// TestComment
+//
+func TestComment(t *testing.T) {
+	data := "# Test comment\n" +
+		"[ENGLISH]\n" +
+		"#satu = one\n" +
+		"dua = two\n" +
+		";tiga = three\n"
+
+	reader := strings.NewReader(data)
+	ini, err := LoadReader(reader)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if ini.Read("english", "satu") == "one" {
+		t.Errorf("Error comment detection '#one'")
+	}
+
+	if ini.Read("english", "#satu") == "one" {
+		t.Errorf("Error comment detection '#one'")
+	}
+
+	if ini.Read("english", "dua") != "two" {
+		t.Errorf("Error comment detection 'two'")
+	}
+
+	if ini.Read("english", "tiga") == "three" {
+		t.Errorf("Error comment detection ';tiga'")
+	}
+
+	if ini.Read("english", "tiga") == ";three" {
+		t.Errorf("Error comment detection ';tiga'")
+	}
+
 }
