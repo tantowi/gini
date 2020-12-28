@@ -1,7 +1,12 @@
-# GINI
+# tantowi/gini
 
-GINI is Go module to read INI format configuration file
-<br><br>
+[![Go Reference](https://pkg.go.dev/badge/github.com/tantowi/gini.svg)](https://pkg.go.dev/github.com/tantowi/gini)
+
+<br>
+
+Module `tantowi/gini` is a Go module to read INI format configuration file
+
+<br>
 
 ## HOW TO USE
 
@@ -47,12 +52,8 @@ host := ini.Read("server", "host")
 port := ini.Read("server", "port")
 ```
 
+<br><br>
 
-
-
-
-
-<br><br><br>
 ## Copyright
 
 Copyright &copy; 2020 Tantowi Mustofa, ttw@tantowi.com<br>
