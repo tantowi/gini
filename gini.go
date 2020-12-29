@@ -112,7 +112,6 @@ func (f *Ini) KeyList(sectionName string) []string {
 func parseIni(in *bufio.Reader) (map[string]keys, error) {
 	var data = make(map[string]keys)
 	var sectionName string = ""
-	var sectionItems map[string]string
 	var done = false
 	var lineNumber = 0
 
@@ -150,45 +149,36 @@ func parseIni(in *bufio.Reader) (map[string]keys, error) {
 				return nil, errors.New("Invalid section at line " + strconv.Itoa(lineNumber))
 			}
 
-			name := strings.TrimSpace(strings.ToLower(line[1 : ln-1]))
-			//log.Println(">> section: \"" + name + "\"")
-
-			if sectionItems != nil {
-				// save section to data
-				data[sectionName] = sectionItems
-				sectionName = ""
-				sectionItems = nil
-			}
-
-			// create new section
-			sectionName = name
-			sectionItems = make(map[string]string)
+			sectionName = strings.TrimSpace(strings.ToLower(line[1 : ln-1]))
+			//log.Println(">> section: " + sectionName)
 			continue
 		}
 
+		// key
 		n = strings.IndexRune(line, '=')
 		if n < 0 {
 			return nil, errors.New("Invalid format at line " + strconv.Itoa(lineNumber))
 		}
 
-		name := strings.ToLower(strings.TrimSpace(line[:n]))
-		value := strings.TrimSpace(line[n+1:])
-		//log.Println(">> key: \"" + name + "\"  value: \"" + value + "\"")
-
-		if sectionItems == nil {
+		if sectionName == "" {
 			return nil, errors.New("Key without section at line " + strconv.Itoa(lineNumber))
 		}
 
-		if name == "" {
+		keyName := strings.ToLower(strings.TrimSpace(line[:n]))
+		keyValue := strings.TrimSpace(line[n+1:])
+		//log.Println(">> key: " + name + ", value: " + value )
+
+		if keyName == "" {
 			return nil, errors.New("Empty key at line " + strconv.Itoa(lineNumber))
 		}
 
-		sectionItems[name] = value
-	}
+		section, fnd := data[sectionName]
+		if !fnd {
+			section = make(map[string]string)
+			data[sectionName] = section
+		}
 
-	// save last section
-	if sectionItems != nil {
-		data[sectionName] = sectionItems
+		section[keyName] = keyValue
 	}
 
 	return data, nil

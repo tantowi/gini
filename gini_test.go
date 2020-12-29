@@ -264,3 +264,58 @@ func TestComment(t *testing.T) {
 	}
 
 }
+
+//
+// TestSplitSection
+//
+func TestSplitSection(t *testing.T) {
+	data := "" +
+		"# Test split section      \n" +
+		"[ENGLISH]                 \n" +
+		"satu = one                \n" +
+		"dua = two                 \n" +
+		"                          \n" +
+		"[FRENCH]                  \n" +
+		"satu = une                \n" +
+		"dua = deux                \n" +
+		"tiga = trois              \n" +
+		"                          \n" +
+		"[ENGLISH]                 \n" +
+		"tiga = three              \n" +
+		"empat = four              \n"
+
+	reader := strings.NewReader(data)
+	ini, err := LoadReader(reader)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if ini.Read("english", "satu") != "one" {
+		t.Errorf("Error split section: english/satu")
+	}
+
+	if ini.Read("english", "dua") != "two" {
+		t.Errorf("Error split section: english/dua")
+	}
+
+	if ini.Read("english", "tiga") != "three" {
+		t.Errorf("Error split section: english/tiga")
+	}
+
+	if ini.Read("english", "empat") != "four" {
+		t.Errorf("Error split section: english/empat")
+	}
+
+	if ini.Read("french", "satu") != "une" {
+		t.Errorf("Error split section: french/satu")
+	}
+
+	if ini.Read("french", "dua") != "deux" {
+		t.Errorf("Error split section: french/dua")
+	}
+
+	if ini.Read("french", "tiga") != "trois" {
+		t.Errorf("Error split section: french/tiga")
+	}
+
+}
