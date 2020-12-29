@@ -22,6 +22,27 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+//
+// Package gini read INI format configuration file.
+// Many use INI format for configuration file because of its simplicity
+//
+//    1. Ini file grouped by section. Section name appears on a line by itself, in square bracket ( [] )
+//    2. Properties appears below its section. Property has name and value, separated by equal sign ( = )
+//    3. Characters after # or ; is comment and ignored
+//
+// Example :
+//    # my configuration file
+//
+//    [dbserver]
+//    host = 192.168.0.10
+//    port = 5432
+//    user = postgres
+//    pass = postgres
+//
+//    [apiserver]
+//    host = 192.168.0.20
+//    port = 8080
+//
 package gini
 
 import (
@@ -34,7 +55,7 @@ import (
 )
 
 //
-// Ini : parsed INI config file
+// Ini configuration type
 //
 type Ini struct {
 	sections map[string]keys
@@ -43,7 +64,8 @@ type Ini struct {
 type keys map[string]string
 
 //
-// Read : Read a value. Return "" if section or key not found
+// Read a value from configuration with specified sectionName and keyName.
+// Return "" if section or key not found
 //
 func (f *Ini) Read(sectionName, keyName string) string {
 	keys := f.sections[sectionName]
@@ -55,7 +77,8 @@ func (f *Ini) Read(sectionName, keyName string) string {
 }
 
 //
-// SectionExists : check whether a section exists
+// SectionExists check whether a section exists.
+// Return `true` if the section exists
 //
 func (f *Ini) SectionExists(sectionName string) bool {
 	_, fnd := f.sections[sectionName]
@@ -63,7 +86,8 @@ func (f *Ini) SectionExists(sectionName string) bool {
 }
 
 //
-// KeyExists : check whether a key exists
+// KeyExists check whether a key in a section exists.
+// Return `true` if the key exists
 //
 func (f *Ini) KeyExists(sectionName, keyName string) bool {
 	sect, fnd := f.sections[sectionName]
@@ -76,7 +100,8 @@ func (f *Ini) KeyExists(sectionName, keyName string) bool {
 }
 
 //
-// SectionList : get list of sections
+// SectionList list of available sections.
+// Return `array of string` contains available sections
 //
 func (f *Ini) SectionList() []string {
 	var lst []string
@@ -89,7 +114,8 @@ func (f *Ini) SectionList() []string {
 }
 
 //
-// KeyList : get list of keys on a section
+// KeyList list of keys on a specified section.
+// Return `array of string` contains available keys in that section
 //
 func (f *Ini) KeyList(sectionName string) []string {
 	var lst []string
@@ -107,7 +133,9 @@ func (f *Ini) KeyList(sectionName string) []string {
 }
 
 //
-// parseIni : parse ini file
+// parseIni parse ini string in `Reader`.
+// Return map of sections
+// Also return error if occured while reading and parsing the INI. On successful, error is nil
 //
 func parseIni(in *bufio.Reader) (map[string]keys, error) {
 	var data = make(map[string]keys)
@@ -185,7 +213,9 @@ func parseIni(in *bufio.Reader) (map[string]keys, error) {
 }
 
 //
-// LoadReader : load INI file as io.Reader
+// LoadReader load INI file as io.Reader
+// Return *Ini ready to read
+// Return error if occured while reading and parsing the INI. On successful, error is nil
 //
 func LoadReader(in io.Reader) (*Ini, error) {
 	bufin, ok := in.(*bufio.Reader)
@@ -204,6 +234,8 @@ func LoadReader(in io.Reader) (*Ini, error) {
 
 //
 // LoadFile : load INI file as path
+// Return *Ini ready to read
+// Return error if occured while reading and parsing the INI. On successful, error is nil
 //
 func LoadFile(path string) (*Ini, error) {
 	in, err := os.Open(path)
