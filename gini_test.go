@@ -27,6 +27,7 @@ package gini
 import (
 	"errors"
 	"fmt"
+	"sort"
 	"strings"
 	"testing"
 )
@@ -147,6 +148,14 @@ func sliceCompare(value, expect []string) error {
 	if len(value) != len(expect) {
 		return fmt.Errorf("Expect: %d items, got: %d items", len(expect), len(value))
 	}
+
+	sort.Slice(value, func(i, j int) bool {
+		return value[i] < value[j]
+	})
+
+	sort.Slice(expect, func(i, j int) bool {
+		return expect[i] < expect[j]
+	})
 
 	for i, v := range value {
 		if v != expect[i] {
