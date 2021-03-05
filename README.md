@@ -5,7 +5,9 @@
 <br>
 
 Module `tantowi/gini` is a Go module to read INI format configuration file
+<br>
 
+[![Go](https://github.com/tantowi/gini/actions/workflows/action-on-push.yml/badge.svg)](https://github.com/tantowi/gini/actions/workflows/action-on-push.yml)
 <br>
 
 ## HOW TO USE
