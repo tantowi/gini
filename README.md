@@ -1,6 +1,7 @@
 # tantowi/gini
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/tantowi/gini.svg)](https://pkg.go.dev/github.com/tantowi/gini)
+  ![GitHub tag](https://img.shields.io/github/v/tag/tantowi/gini?label=version)
 
 <br>
 
